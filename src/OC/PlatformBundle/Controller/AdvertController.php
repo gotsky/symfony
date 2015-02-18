@@ -6,6 +6,7 @@ namespace OC\PlatformBundle\Controller;
 use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\Form\AdvertEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -110,7 +111,7 @@ class AdvertController extends Controller
 
   }
 
-  public function editAction($id)
+  public function editAction($id,Request $request)
   {
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
@@ -123,9 +124,22 @@ class AdvertController extends Controller
       throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-    // Ici, on s'occupera de la création et de la gestion du formulaire
+    //$form = $this->get('form.factory')->create(new AdvertType(), $advert);
+    //ou en plus court
+    $form = $this->createForm(new AdvertEditType(), $advert);
+
+    if ($form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($advert);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+      return $this->redirect($this->generateUrl('oc_platform_view', array('id' => $advert->getId())));
+    }
 
     return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
+      'form' => $form->createView(),
       'advert' => $advert
     ));
   }
