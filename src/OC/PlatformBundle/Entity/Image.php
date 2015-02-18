@@ -4,6 +4,7 @@
 namespace OC\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Entity\ImageRepository")
@@ -29,6 +30,16 @@ class Image
   private $alt;
 
   private $file;
+  
+  public function getFile()
+  {
+    return $this->file;
+  }
+
+  public function setFile(UploadedFile $file = null)
+  {
+    $this->file = $file;
+  }
 
   // On ajoute cet attribut pour y stocker temporairement le nom du fichier
   private $tempFilename;
