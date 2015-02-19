@@ -79,6 +79,9 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+
+      //$advert->getImage()->upload(); //remplacé par les evenements doctrine
+
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
@@ -129,6 +132,8 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertEditType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+      //$advert->getImage()->upload(); //remplacé par les evenements doctrine
+
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
