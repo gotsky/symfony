@@ -6,6 +6,7 @@ namespace OC\PlatformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Entity\AdvertRepository")
@@ -22,21 +23,25 @@ class Advert
 
   /**
    * @ORM\Column(name="date", type="datetime")
+   * @Assert\DateTime()
    */
   private $date;
 
   /**
    * @ORM\Column(name="title", type="string", length=255, unique=true)
+   * @Assert\Length(min=10)
    */
   private $title;
 
   /**
    * @ORM\Column(name="author", type="string", length=255)
+   * @Assert\Length(min=2)
    */
   private $author;
 
   /**
    * @ORM\Column(name="content", type="text")
+    * @Assert\NotBlank()
    */
   private $content;
 
@@ -52,6 +57,7 @@ class Advert
 
   /**
    * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
+   * @Assert\Valid()
    */
   private $categories;
 
@@ -75,6 +81,7 @@ class Advert
    * @ORM\Column(length=128, unique=true)
    */
   private $slug;
+
 
   public function __construct()
   {
