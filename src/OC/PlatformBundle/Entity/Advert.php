@@ -7,10 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use OC\PlatformBundle\Validator\Antiflood;
+
 
 /**
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Entity\AdvertRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks() 
+ * @UniqueEntity(fields="title", message="Une annonce existe déjà avec ce titre.")
  */
 class Advert
 {
@@ -42,6 +47,7 @@ class Advert
   /**
    * @ORM\Column(name="content", type="text")
     * @Assert\NotBlank()
+    * @Antiflood()
    */
   private $content;
 
@@ -284,12 +290,21 @@ class Advert
     $this->nbApplications--;
   }
 
-  
-    /**
-   * @Assert\True()
+  /**
+   * @Assert\Callback
    */
-  public function isTitle()
+  public function isContentValid(ExecutionContextInterface $context)
   {
-    return false;
+    $forbiddenWords = array('échec', 'abandon');
+
+    // On vérifie que le contenu ne contient pas l'un des mots
+    if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getContent())) {
+      // La règle est violée, on définit l'erreur
+      $context
+        ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+        ->atPath('content')                                                   // attribut de l'objet qui est violé
+        ->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+      ;
+    }
   }
 }
