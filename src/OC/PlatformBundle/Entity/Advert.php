@@ -283,4 +283,13 @@ class Advert
   {
     $this->nbApplications--;
   }
+
+  
+    /**
+   * @Assert\True()
+   */
+  public function isTitle()
+  {
+    return false;
+  }
 }
