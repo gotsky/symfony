@@ -10,6 +10,7 @@ use OC\PlatformBundle\Form\AdvertEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class AdvertController extends Controller
 {
@@ -69,8 +70,17 @@ class AdvertController extends Controller
     ));
   }
 
+  /**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
   public function addAction(Request $request)
   {
+    // On vérifie que l'utilisateur dispose bien du rôle ROLE_AUTEUR (remplacé par l'annotation)
+    // if (!$this->get('security.context')->isGranted('ROLE_AUTEUR')) {
+    //   // Sinon on déclenche une exception « Accès interdit »
+    //   throw new AccessDeniedException('Accès limité aux auteurs.');
+    // }
+
     // On crée un objet Advert
     $advert = new Advert();
 
