@@ -88,6 +88,12 @@ class Advert
    */
   private $slug;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="OC\UserBundle\Entity\User", inversedBy="adverts")
+   * @ORM\JoinColumn(nullable=false)
+   */
+  private $user;
+
 
   public function __construct()
   {
@@ -308,8 +314,15 @@ class Advert
     }
   }
 
-  // public function getUser()
-  // {
-  //   return $this->content;
-  // }
+  public function setAdvertUser(\OC\UserBundle\Entity\User $user)
+  {
+    $this->user = $user;
+
+    return $this;
+  }
+
+  public function getUser()
+  {
+    return $this->user;
+  }
 }

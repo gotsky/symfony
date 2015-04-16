@@ -17,4 +17,17 @@ class User extends BaseUser
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   protected $id;
+
+  /**
+   * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Advert", mappedBy="user")
+   */
+  private $adverts;
+
+  /**
+   * @return ArrayCollection
+   */
+  public function getAdverts()
+  {
+    return $this->adverts;
+  }
 }

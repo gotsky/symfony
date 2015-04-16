@@ -91,6 +91,14 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+
+      // Pour récupérer le service UserManager du bundle
+      $userManager = $this->get('fos_user.user_manager');
+
+      // Pour charger un utilisateur
+      $myuser = $userManager->findUserBy(array('username' => 'vanda'));
+
+      $advert->setAdvertUser($myuser);
       
       //$advert->getImage()->upload(); //remplacé par les evenements doctrine
       //********evenement perso ********

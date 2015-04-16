@@ -37,6 +37,8 @@ class BetaListener
       return;
     }
 
+    
+
     // On utilise notre BetaHRML
     $response = $this->betaHTML->displayBeta($event->getResponse(), $remainingDays);
     // On met à jour la réponse avec la nouvelle valeur

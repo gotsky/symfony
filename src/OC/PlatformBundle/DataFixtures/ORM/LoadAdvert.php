@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Application;
+use OC\UserBundle\Entity\User;
 
 class LoadAdvert implements FixtureInterface
 {
@@ -18,6 +19,7 @@ class LoadAdvert implements FixtureInterface
     $advert1 = new Advert();
     $advert1
         ->setAuthor('Antoine')
+        ->setUser($myuser)
         ->setContent('Recherche un développeur Symfony2 débutant, blabla')
         ->setTitle('Développeur Symfony2')
     ;
@@ -59,6 +61,7 @@ class LoadAdvert implements FixtureInterface
     $advert2 = new Advert();
     $advert2
         ->setAuthor('Michel')
+        ->setUser($myuser)
         ->setContent('Recherche un développeur PHP, HTML5, CSS3 expert.')
         ->setTitle('Développeur Web')
         ->setDate($date)
@@ -72,6 +75,7 @@ class LoadAdvert implements FixtureInterface
         $advert3 = new Advert();
         $advert3
             ->setAuthor('Momo'.$i)
+            ->setUser($myuser)
             ->setContent('Recherche un Designer Prestashop avec déjà de l\'expérience dans ce domaine')
             ->setTitle('Designer Prestashop - '.$i)
         ;
