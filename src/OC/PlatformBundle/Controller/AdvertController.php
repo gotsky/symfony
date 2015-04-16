@@ -7,6 +7,8 @@ use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\Form\AdvertEditType;
+use OC\PlatformBundle\Bigbrother\BigbrotherEvents;
+use OC\PlatformBundle\Bigbrother\MessagePostEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,8 +91,21 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
-
+      
       //$advert->getImage()->upload(); //remplacé par les evenements doctrine
+      //********evenement perso ********
+      // On crée l'évènement avec ses 2 arguments
+      $event = new MessagePostEvent($advert->getContent(), $advert->getUser());
+
+      // On déclenche l'évènement
+      $this
+        ->get('event_dispatcher')
+        ->dispatch(BigbrotherEvents::onMessagePost, $event)
+      ;
+
+      // On récupère ce qui a été modifié par le ou les listeners, ici le message
+      $advert->setContent($event->getMessage());
+      //********fin evenement perso ********
 
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);

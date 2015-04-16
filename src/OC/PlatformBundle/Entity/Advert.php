@@ -307,4 +307,9 @@ class Advert
       ;
     }
   }
+
+  // public function getUser()
+  // {
+  //   return $this->content;
+  // }
 }
