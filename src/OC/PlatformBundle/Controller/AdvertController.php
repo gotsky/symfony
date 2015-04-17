@@ -96,7 +96,7 @@ class AdvertController extends Controller
       $userManager = $this->get('fos_user.user_manager');
 
       // Pour charger un utilisateur
-      $myuser = $userManager->findUserBy(array('username' => 'vanda'));
+      $myuser = $userManager->findUserBy(array('username' => 'Gotsky'));
 
       $advert->setAdvertUser($myuser);
       
@@ -227,6 +227,13 @@ class AdvertController extends Controller
 
     return $this->render('OCPlatformBundle:Advert:menu.html.twig', array(
       'listAdverts' => $listAdverts
+    ));
+  }
+
+  public function translationAction($name)
+  {
+    return $this->render('OCPlatformBundle:Advert:translation.html.twig', array(
+      'name' => $name
     ));
   }
 
