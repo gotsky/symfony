@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 class AdvertController extends Controller
 {
   public function indexAction($page)
@@ -49,18 +52,26 @@ class AdvertController extends Controller
     ));
   }
 
-  public function viewAction($id)
+  
+  /**
+   * @ParamConverter("advert", options={"mapping": {"advert_id": "id"}})
+   */
+  public function viewAction(Advert $advert)
   {
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
 
+    // Ici, $advert est une instance de l'entité Advert, portant l'id $id
+    //cequi evite le find et le test sur l'existence
+
+
     // Pour récupérer une annonce unique : on utilise find()
-    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
+    //$advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
     // On vérifie que l'annonce avec cet id existe bien
-    if ($advert === null) {
-      throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
-    }
+    // if ($advert === null) {
+    //   throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
+    // }
 
     // On récupère la liste des advertSkill pour l'annonce $advert
     $listAdvertSkills = $em->getRepository('OCPlatformBundle:AdvertSkill')->findByAdvert($advert);
@@ -121,7 +132,7 @@ class AdvertController extends Controller
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-      return $this->redirect($this->generateUrl('oc_platform_view', array('id' => $advert->getId())));
+      return $this->redirect($this->generateUrl('oc_platform_view', array('advert_id' => $advert->getId())));
     }
 
     return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
@@ -147,18 +158,22 @@ class AdvertController extends Controller
 
   }
 
-  public function editAction($id,Request $request)
+  
+  /**
+   * @ParamConverter("advert", options={"mapping": {"advert_id": "id"}})
+   */
+  public function editAction(Advert $advert,Request $request)
   {
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
 
     // On récupère l'entité correspondant à l'id $id
-    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
+    //$advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
     // Si l'annonce n'existe pas, on affiche une erreur 404
-    if ($advert == null) {
-      throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
-    }
+    // if ($advert == null) {
+    //   throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
+    // }
 
     //$form = $this->get('form.factory')->create(new AdvertType(), $advert);
     //ou en plus court
@@ -173,7 +188,7 @@ class AdvertController extends Controller
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-      return $this->redirect($this->generateUrl('oc_platform_view', array('id' => $advert->getId())));
+      return $this->redirect($this->generateUrl('oc_platform_view', array('advert_id' => $advert->getId())));
     }
 
     return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
@@ -182,16 +197,20 @@ class AdvertController extends Controller
     ));
   }
 
-  public function deleteAction($id, Request $request)
+  
+  /**
+   * @ParamConverter("advert", options={"mapping": {"advert_id": "id"}})
+   */
+  public function deleteAction(Advert $advert, Request $request)
   {
     $em = $this->getDoctrine()->getManager();
 
     // On récupère l'annonce $id
-    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
+    // $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
-    if (null === $advert) {
-      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-    }
+    // if (null === $advert) {
+    //   throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+    // }
 
     // On crée un formulaire vide, qui ne contiendra que le champ CSRF
     // Cela permet de protéger la suppression d'annonce contre cette faille
@@ -235,6 +254,14 @@ class AdvertController extends Controller
     return $this->render('OCPlatformBundle:Advert:translation.html.twig', array(
       'name' => $name
     ));
+  }
+
+  /**
+   * @ParamConverter("json")
+   */
+  public function ParamConverterAction($json)
+  {
+    return new Response(print_r($json, true));
   }
 
 }
