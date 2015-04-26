@@ -11,6 +11,11 @@
   {% block stylesheets %}
     {# On charge le CSS de bootstrap depuis le site directement #}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    {# <link rel="stylesheet" href="{{ asset('bundles/ocplatform/css/main.css') }}" type="text/css" /> #}
+    {% stylesheets filter='cssrewrite, yui_css' 'bundles/ocplatform/css/main.css'
+    '@OCPlatformBundle/Resources/public/css/main.css' %}
+      <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
   {% endblock %}
 </head>
 
